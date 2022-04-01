@@ -1,6 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 import random
+import time
 
 
 class Point:
@@ -8,16 +9,16 @@ class Point:
         self.x = x
         self.y = y
 
+
 class Graph:
     def __init__(self):
-        # TODO create graph window
-        plt.axis(-1, 2, -1, 2)
+        plt.axis([-0.1, 1.1, -0.1, 1.1])
 
     def plot_point(self, point: Point):
-        # TODO add point to plot
-        print(f"Plotting ({point.x},{point.y})")
-        plt.scatter(point.x, point.y)
-        plt.pause(0.05)
+        plt.scatter(point.x, point.y, c=["#000000"], marker=",", linewidths=0, s=1)
+
+    def update_display(self):
+        plt.pause(0.001)
 
 
 def midpoint(a: Point, b: Point):
@@ -25,6 +26,7 @@ def midpoint(a: Point, b: Point):
         (a.x + b.x) / 2.0,
         (a.y + b.y) / 2.0,
     )
+
 
 def main():
     graph = Graph()
@@ -35,13 +37,20 @@ def main():
     ]
     for point in corners:
         graph.plot_point(point)
-    point = Point(0.1, 0.1)
+    point = Point(0.0, 0.0)
+    total_points = 100000
+    group_size = 2000
+    for _ in range(int(total_points / group_size)):
+        for _ in range(group_size):
+            graph.plot_point(point)
+            point = midpoint(
+                point,
+                random.choice(corners)
+            )
+        graph.update_display()
+    print("Finished generating fractal")
     while True:
-        graph.plot_point(point)
-        point = midpoint(
-            point,
-            random.choice(corners)
-        )
+        time.sleep(1)
 
 
 if __name__ == "__main__":
